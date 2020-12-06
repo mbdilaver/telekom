@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 @ToString
 public class CallRequest {
 
-    private @Value("#{messageProperties['text']}") String message;
-
     private String destinationNumber;
     private String targetNumber;
 
