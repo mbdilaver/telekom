@@ -1,0 +1,1 @@
+docker run --name telekom-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password MYSQL_DATABASE=telekom -d mysql:latest
