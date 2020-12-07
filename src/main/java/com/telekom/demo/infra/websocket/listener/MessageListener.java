@@ -23,7 +23,6 @@ public class MessageListener {
 
             NotificationSubscription subscription = NotificationSubscription.from(number);
             callService.checkNotifications(subscription);
-//            callService.notifyMissedCallers(subscription);
         }
     }
 

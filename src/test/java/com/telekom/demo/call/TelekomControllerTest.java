@@ -44,25 +44,7 @@ public class TelekomControllerTest extends AbstractControllerTest {
                 asList(new WebSocketTransport(new StandardWebSocketClient()))));
 
     }
-
-    @Test
-    public void should_sendMessage() throws InterruptedException, ExecutionException, TimeoutException {
-        // websocket
-        String webSocketUrl = "ws://localhost:" + port + "/chat";
-
-        StompSession session = stompClient
-                .connect(webSocketUrl, new StompSessionHandlerAdapter() {
-                })
-                .get(1, SECONDS);
-        session.subscribe("/topic/message", new MessageStompFrameHandler());
-
-        StompHeaders headers = new StompHeaders();
-        headers.setDestination("/app/hello/MBD");
-        headers.setId("5");
-
-        session.send(headers, null);
-    }
-
+    
     @Test
     public void should_getNotifications() throws InterruptedException, ExecutionException, TimeoutException {
 
