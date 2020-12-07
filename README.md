@@ -39,13 +39,13 @@ This application uses JWTs for authentication.
 To get an JWT you first need to register. Send a `POST` request to `http://localhost:8080/accounts` with a body like given below:
 
 ```
-{    "number": "555111223",    "password": "12345"}
+{ "number": "555111223", "password": "12345" }
 ```
 
 Then login with that user credentials. Send a `POST` request to `http://localhost:8080/login` with the given body:
 
 ```
-{ "number": "555111223", "password": "12345"}
+{ "number": "555111223", "password": "12345" }
 ```
 
 In the response `Headers` you will see your token at `Authorization` field.
@@ -73,13 +73,13 @@ WebSockets are used by server in two cases:
 1. To make a call you need to send a `POST` request to `http://localhost:8080/calls` with a body like below. This will create a `Call Entity` in `Call` table. Several calls from/to same number can be made.
 
 ```
-{    "destinationNumber": "555111223",    "targetNumber": "555444332"}
+{ "destinationNumber": "555111223", "targetNumber": "555444332" }
 ```
 
 2. To approve missed calls you need to send a `PUT` request to `http://localhost:8080/calls` with a body like below. This will notify callers of corresponding calls using `/notifications/{destinationNumber}` topic of each caller.
 
 ```
-{    "callIdList": [1, 2, 3, 4]}
+{ callIdList": [1, 2, 3, 4] }
 ```
 
 ### Architecture
