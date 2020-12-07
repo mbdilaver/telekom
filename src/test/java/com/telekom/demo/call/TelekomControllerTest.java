@@ -32,16 +32,10 @@ import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TelekomControllerIT {
+
+public class TelekomControllerTest extends AbstractControllerTest {
     private BlockingQueue<MissedNotificationMessage> messageBlockingQueue;
     private WebSocketStompClient stompClient;
-
-    @LocalServerPort
-    protected Integer port;
-
-    @Autowired
-    protected TestRestTemplate testRestTemplate;
 
     @BeforeEach
     public void setup() {
@@ -81,7 +75,7 @@ public class TelekomControllerIT {
         ResponseEntity<CallResponse> response = testRestTemplate.exchange(
                 "/calls",
                 HttpMethod.POST,
-                new HttpEntity<>(request, new HttpHeaders()),
+                new HttpEntity<>(request, httpHeaders()),
                 CallResponse.class);
 
         // then

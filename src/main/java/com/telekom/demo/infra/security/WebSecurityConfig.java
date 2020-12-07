@@ -26,10 +26,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] SWAGGER_ENDPOINTS = new String[]{
             "/",
-            "/v2/api-docs",           // swagger
-            "/webjars/**",            // swagger-ui webjars
-            "/swagger-resources/**",  // swagger-ui resources
-            "/configuration/**",      // swagger configuration
+            "/v2/api-docs",
+            "/webjars/**",
+            "/swagger-resources/**",
+            "/configuration/**",
             "/*.html",
             "/favicon.ico",
             "/**/*.html",
@@ -46,12 +46,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(SWAGGER_ENDPOINTS).permitAll()
                 .antMatchers(HttpMethod.POST, PERMITTED_ENDPOINTS).permitAll()
+                .antMatchers("/chat/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

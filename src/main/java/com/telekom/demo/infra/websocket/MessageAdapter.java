@@ -28,6 +28,7 @@ public class MessageAdapter implements MessagePort {
     }
 
     private void sendAvailableNotification(Call call) {
-        template.convertAndSend(AvailableNotificationMessage.from(call));
+        AvailableNotificationMessage message = AvailableNotificationMessage.from(call);
+        template.convertAndSend("/notifications/" + call.getDestinationNumber(), message);
     }
 }
