@@ -10,8 +10,5 @@ import java.util.List;
 @Setter
 public class DeliveredCallRequest {
 
-    @Size(min = 9, max = 10)
-    private String targetNumber;
     private List<Long> callIdList;
-
 }
