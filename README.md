@@ -7,7 +7,8 @@
 Go run `docker-compose up` in `/hub` folder.
 
 ```bash
-$ cd /hub docker-compose up
+$ cd hub 
+$ docker-compose up
 ```
 
 `/hub/docker-compose.yml` file pulls application image from [Docker Hub](https://hub.docker.com/repository/docker/mbdilaver/telekom).
