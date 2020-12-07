@@ -39,7 +39,7 @@ public class SpringFoxConfig {
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.telekom.demo.infra"))
                 .paths(PathSelectors.any())
                 .build();
     }
