@@ -27,9 +27,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public AccountResponse retrieve(@PathVariable String id, Authentication authentication) {
-//        validateAccountIdEquals(id, authentication);
-
+    public AccountResponse retrieve(@PathVariable String id) {
         Account account = service.retrieve(id);
         return AccountResponse.from(account);
     }

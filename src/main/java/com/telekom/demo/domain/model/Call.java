@@ -1,6 +1,8 @@
 package com.telekom.demo.domain.model;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 

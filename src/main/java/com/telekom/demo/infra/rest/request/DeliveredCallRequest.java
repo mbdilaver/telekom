@@ -1,17 +1,16 @@
 package com.telekom.demo.infra.rest.request;
 
-import com.telekom.demo.domain.model.Call;
-import com.telekom.demo.domain.model.Calls;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class DeliveredCallRequest {
 
+    @Size(min = 9, max = 10)
     private String targetNumber;
     private List<Long> callIdList;
 

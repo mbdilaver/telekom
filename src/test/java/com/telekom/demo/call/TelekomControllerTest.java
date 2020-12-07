@@ -44,7 +44,7 @@ public class TelekomControllerTest extends AbstractControllerTest {
                 asList(new WebSocketTransport(new StandardWebSocketClient()))));
 
     }
-    
+
     @Test
     public void should_getNotifications() throws InterruptedException, ExecutionException, TimeoutException {
 
