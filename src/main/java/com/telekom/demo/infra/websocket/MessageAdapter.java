@@ -4,7 +4,6 @@ import com.telekom.demo.domain.model.Call;
 import com.telekom.demo.domain.model.CallNotification;
 import com.telekom.demo.domain.model.Calls;
 import com.telekom.demo.domain.port.MessagePort;
-import com.telekom.demo.infra.websocket.dto.AvailableNotificationMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -27,12 +26,12 @@ public class MessageAdapter implements MessagePort {
 
     @Override
     public void publishNotifications(CallNotification subscription) {
-        String message = extractMessage(subscription);
+        String message = createNotificationMessage(subscription);
 
         template.convertAndSend("/notifications/" + subscription.getTargetNumber(), message);
     }
 
-    private String extractMessage(CallNotification subscription) {
+    private String createNotificationMessage(CallNotification subscription) {
         Map<String, Optional<Call>> lastCalls = subscription.getCallList().stream()
                 .collect(groupingBy(Call::getDestinationNumber, maxBy(Comparator.comparing(Call::getCreatedDate))));
 
@@ -56,14 +55,24 @@ public class MessageAdapter implements MessagePort {
         return date.format(formatter);
     }
 
-
     @Override
     public void notifyCallers(Calls calls) {
         calls.getCallList().forEach(this::sendAvailableNotification);
     }
 
     private void sendAvailableNotification(Call call) {
-        AvailableNotificationMessage message = AvailableNotificationMessage.from(call);
+        String message = createAvailableMessage(call);
+
         template.convertAndSend("/notifications/" + call.getDestinationNumber(), message);
+    }
+
+    private String createAvailableMessage(Call call) {
+        String format = "The number you called %s at %s is now available";
+
+        return String.format(
+                format,
+                call.getTargetNumber(),
+                formatDate(call.getCreatedDate()
+                ));
     }
 }
