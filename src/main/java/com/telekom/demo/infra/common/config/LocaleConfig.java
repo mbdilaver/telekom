@@ -1,4 +1,4 @@
-package com.telekom.demo.infra.config;
+package com.telekom.demo.infra.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

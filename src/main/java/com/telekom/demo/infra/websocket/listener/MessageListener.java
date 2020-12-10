@@ -1,7 +1,6 @@
 package com.telekom.demo.infra.websocket.listener;
 
 import com.telekom.demo.domain.CallService;
-import com.telekom.demo.domain.model.NotificationSubscription;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.Message;
@@ -21,8 +20,7 @@ public class MessageListener {
         if (simpDestination != null && simpDestination.startsWith("/notifications")) {
             String number = getNumberFromDestination(simpDestination);
 
-            NotificationSubscription subscription = NotificationSubscription.from(number);
-            callService.checkNotifications(subscription);
+            callService.checkNotifications(number);
         }
     }
 

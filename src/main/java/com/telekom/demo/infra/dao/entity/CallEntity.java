@@ -3,7 +3,6 @@ package com.telekom.demo.infra.dao.entity;
 import com.telekom.demo.domain.model.Call;
 import com.telekom.demo.domain.model.CallNotification;
 import com.telekom.demo.domain.model.Calls;
-import com.telekom.demo.domain.model.NotificationSubscription;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -45,9 +44,9 @@ public class CallEntity {
         return callEntity;
     }
 
-    public static CallNotification toModel(List<CallEntity> callEntities, NotificationSubscription subscription) {
+    public static CallNotification toModel(List<CallEntity> callEntities, String number) {
         return CallNotification.builder()
-                .targetNumber(subscription.getNumber())
+                .targetNumber(number)
                 .callList(callEntities.stream().map(CallEntity::toModel).collect(Collectors.toList()))
                 .build();
     }

@@ -3,7 +3,6 @@ package com.telekom.demo.infra.dao;
 import com.telekom.demo.domain.model.Call;
 import com.telekom.demo.domain.model.CallNotification;
 import com.telekom.demo.domain.model.Calls;
-import com.telekom.demo.domain.model.NotificationSubscription;
 import com.telekom.demo.domain.port.CallPort;
 import com.telekom.demo.infra.dao.entity.CallEntity;
 import com.telekom.demo.infra.dao.repository.CallRepository;
@@ -26,10 +25,17 @@ public class CallAdapter implements CallPort {
     }
 
     @Override
-    public CallNotification getMissedCalls(NotificationSubscription subscription) {
-        List<CallEntity> callEntities = callRepository.getCallEntitiesByIsDeliveredFalseAndTargetNumberEquals(subscription.getNumber());
+    public CallNotification getMissedCalls(String number) {
+        List<CallEntity> callEntities = callRepository.getCallEntitiesByIsDeliveredFalseAndTargetNumberEquals(number);
 
-        return CallEntity.toModel(callEntities, subscription);
+        return CallEntity.toModel(callEntities, number);
+    }
+
+    @Override
+    public Calls getCalls(String targetNumber, List<String> destinationNumbers, Boolean isDelivered) {
+        List<CallEntity> callEntities = callRepository.getCalls(targetNumber, destinationNumbers, isDelivered);
+
+        return CallEntity.toModel(callEntities);
     }
 
     @Override
@@ -39,10 +45,9 @@ public class CallAdapter implements CallPort {
     }
 
     @Override
-    public Calls getCallsById(List<Long> callIds) {
-        List<CallEntity> calls = callRepository.getCallsById(callIds);
-
-        return CallEntity.toModel(calls);
+    public Boolean missedCallsExist(String targetNumber, List<String> destinationNumbers) {
+        return callRepository.existsByIsDeliveredFalseAndTargetNumberEqualsAndDestinationNumberIn(targetNumber, destinationNumbers);
     }
+
 
 }

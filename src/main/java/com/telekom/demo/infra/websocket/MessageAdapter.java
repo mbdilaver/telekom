@@ -28,10 +28,10 @@ public class MessageAdapter implements MessagePort {
     @Autowired
     private MessageSource messageSource;
 
-    private final SimpMessagingTemplate template;
-
     @Autowired
     private Locale defaultLocale;
+
+    private final SimpMessagingTemplate template;
 
     @Override
     public void publishNotifications(CallNotification subscription) {

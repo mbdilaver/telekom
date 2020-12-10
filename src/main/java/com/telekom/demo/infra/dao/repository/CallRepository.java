@@ -1,5 +1,6 @@
 package com.telekom.demo.infra.dao.repository;
 
+import com.telekom.demo.domain.model.Number;
 import com.telekom.demo.infra.dao.entity.CallEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,12 +13,14 @@ public interface CallRepository extends JpaRepository<CallEntity, Long> {
 
     List<CallEntity> getCallEntitiesByIsDeliveredFalseAndTargetNumberEquals(String targetNumber);
 
-//    List<CallEntity> getDistinctByDestinationNumberAndIdIn(List<Long> ids);
-
-    @Query(value = "select * from call where id in :ids", nativeQuery = true)
-    List<CallEntity> getCallsById(@Param("ids") List<Long> ids);
+    Boolean existsByIsDeliveredFalseAndTargetNumberEqualsAndDestinationNumberIn(String targetNumber, List<String> destinationNumbers);
 
     @Modifying
     @Query(value = "update call set is_delivered = true where id in :ids", nativeQuery = true)
     void approveCallsById(@Param("ids") List<Long> ids);
+
+    @Query(value = "select * from call where is_delivered = :isDelivered and target_number = :targetNumber and destination_number in :destinationNumbers", nativeQuery = true)
+    List<CallEntity> getCalls(@Param("targetNumber") String targetNumber,
+                                @Param("destinationNumbers") List<String> destinationNumbers,
+                                @Param("isDelivered") Boolean isDelivered);
 }

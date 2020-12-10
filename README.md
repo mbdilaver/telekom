@@ -83,6 +83,12 @@ WebSockets are used by server in two cases:
 { callIdList": [1, 2, 3, 4] }
 ```
 
+### Language
+
+You can change message language by setting `telekom.lang` property in `application.yml` to `en` or `tr`. 
+
+You can set `Accept-Language` header to `en` or `tr` for `PUT http://localhost:8080/calls` request. Language of notification messages can be also changed by setting this header field.
+
 ### Architecture
 
 Hexagonal architecture is used for organizing project's code. In domain layer Service classes are getting requests from Controller and Listener classes using port interfaces. Controller and Listeners are implementing this interfaces in adapter classes. Service classes again uses port interfaces to make requests to/from database adapters.
