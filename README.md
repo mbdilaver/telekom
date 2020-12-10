@@ -77,7 +77,7 @@ WebSockets are used by server in two cases:
 { "destinationNumber": "555111223", "targetNumber": "555444332" }
 ```
 
-2. To approve missed calls (made to `555555552`) you need to send a `PUT` request to `http://localhost:8080/calls` with a body like below. This will notify callers of corresponding calls (`555555551`, `555555553`) using `/notifications/{destinationNumber}` topic of each caller.
+2. To approve missed calls (made to `555555552`) you need to send a `PUT` request to `http://localhost:8080/calls` with a body like below. This will notify callers (`555555551`, `555555553`) using `/notifications/{destinationNumber}` topic of each caller.
 
 ```
 { "targetNumber": "555555552", "destinationNumbers": ["555555553", "555555551"]  }
