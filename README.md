@@ -87,23 +87,23 @@ WebSockets are used by server in two cases:
 
 Let's say we have call entities in DB as given below;
 
-![](imgs/1.png)
+![](/Users/mbd/Projects/telekom-client/imgs/1.png)
 
 When a client is subscribed to a number's topic, missed call notification is published through that topic.
 
-![](imgs/2.png)
+![](/Users/mbd/Projects/telekom-client/imgs/2.png)
 
-If a delivery report is sent through REST for a given number it's callers are notified on socket topic. Let's say `555555551` wants to notify it's missed callers.
+If a delivery report is sent through REST for a given number, it's callers are notified on socket topic. Let's say `555555551` wants to notify its missed callers.
 
-![](imgs/3.png)
+![](/Users/mbd/Projects/telekom-client/imgs/3.png)
 
 Let's assume `555555552` also sends notifications.
 
-![](imgs/4.png)
+![](/Users/mbd/Projects/telekom-client/imgs/4.png)
 
 DB will have `true` value for `is_delivered` property of these calls.
 
-![](imgs/5.png)
+![](/Users/mbd/Projects/telekom-client/imgs/5.png)
 
 ### Language
 
