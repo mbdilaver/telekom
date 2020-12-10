@@ -85,7 +85,9 @@ WebSockets are used by server in two cases:
 
 ### Example
 
-Let's say we have call entities in DB as given below;
+Example is made using [this basic client](https://github.com/mbdilaver/telekom-client).
+
+Let's say we have call entities in DB as given below.
 
 ![](/Users/mbd/Projects/telekom-client/imgs/1.png)
 
