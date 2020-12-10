@@ -1,18 +1,15 @@
 package com.telekom.demo.call;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.telekom.demo.infra.rest.request.CallRequest;
 import com.telekom.demo.infra.rest.response.CallResponse;
-import com.telekom.demo.infra.websocket.dto.MissedNotificationMessage;
-import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -34,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class TelekomControllerTest extends AbstractControllerTest {
-    private BlockingQueue<MissedNotificationMessage> messageBlockingQueue;
+    private BlockingQueue<String> messageBlockingQueue;
     private WebSocketStompClient stompClient;
 
     @BeforeEach
@@ -42,16 +39,19 @@ public class TelekomControllerTest extends AbstractControllerTest {
         messageBlockingQueue = new LinkedBlockingDeque<>();
         stompClient = new WebSocketStompClient(new SockJsClient(
                 asList(new WebSocketTransport(new StandardWebSocketClient()))));
+        stompClient.setMessageConverter(new StringMessageConverter());
 
     }
 
     @Test
-    public void should_getNotifications() throws InterruptedException, ExecutionException, TimeoutException {
-
+    public void should_getMissedCalls() throws InterruptedException, ExecutionException, TimeoutException {
         // given
+        String targetNumber = "123456788";
+        String destinationNumber = "123456786";
+
         CallRequest request = new CallRequest();
-        request.setDestinationNumber("1");
-        request.setTargetNumber("2");
+        request.setDestinationNumber(destinationNumber);
+        request.setTargetNumber(targetNumber);
 
         // when
         ResponseEntity<CallResponse> response = testRestTemplate.exchange(
@@ -72,31 +72,62 @@ public class TelekomControllerTest extends AbstractControllerTest {
                 })
                 .get(1, SECONDS);
 
-        String number = "2";
-        session.subscribe("/notifications/" + number, new MessageStompFrameHandler());
+        session.subscribe("/notifications/" + targetNumber, new MessageStompFrameHandler());
 
         //check message
-        MissedNotificationMessage notification = messageBlockingQueue.poll(2, SECONDS);
+        String notification = messageBlockingQueue.poll(2, SECONDS);
 
-        assertThat(notification).isNotNull()
-                .hasFieldOrPropertyWithValue("targetNumber", number);
-        assertThat(notification.getCallList()).hasSize(1);
-        assertThat(notification.getCallList().get(0)).hasFieldOrPropertyWithValue("targetNumber", number);
+        assertThat(notification).isNotBlank();
+        assertThat(StringUtils.containsIgnoreCase(notification, destinationNumber)).isTrue();
+    }
+
+    @Test
+    public void should_getAvailableNotification() throws InterruptedException, ExecutionException, TimeoutException {
+        // given
+        String targetNumber = "123456788";
+        String destinationNumber = "123456786";
+
+        CallRequest request = new CallRequest();
+        request.setDestinationNumber(destinationNumber);
+        request.setTargetNumber(targetNumber);
+
+        // when
+        ResponseEntity<CallResponse> response = testRestTemplate.exchange(
+                "/calls",
+                HttpMethod.POST,
+                new HttpEntity<>(request, httpHeaders()),
+                CallResponse.class);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        // websocket
+        String webSocketUrl = "ws://localhost:" + port + "/chat";
+
+        StompSession session = stompClient
+                .connect(webSocketUrl, new StompSessionHandlerAdapter() {
+                })
+                .get(1, SECONDS);
+
+        session.subscribe("/notifications/" + targetNumber, new MessageStompFrameHandler());
+
+        //check message
+        String notification = messageBlockingQueue.poll(2, SECONDS);
+
+        assertThat(notification).isNotBlank();
+        assertThat(StringUtils.containsIgnoreCase(notification, destinationNumber)).isTrue();
     }
 
     class MessageStompFrameHandler implements StompFrameHandler {
         @Override
         public Type getPayloadType(StompHeaders stompHeaders) {
-            return byte[].class;
+            return String.class;
         }
 
-        @SneakyThrows
         @Override
         public void handleFrame(StompHeaders stompHeaders, Object o) {
-            String s = new String((byte[]) o);
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            messageBlockingQueue.offer(objectMapper.readValue(s, MissedNotificationMessage.class));
+            messageBlockingQueue.add((String) o);
         }
     }
 }
