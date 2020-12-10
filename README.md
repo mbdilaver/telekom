@@ -83,6 +83,28 @@ WebSockets are used by server in two cases:
 { callIdList": [1, 2, 3, 4] }
 ```
 
+### Example
+
+Let's say we have call entities in DB as given below;
+
+![](/Users/mbd/Projects/telekom-client/imgs/1.png)
+
+When a client is subscribed to a number's topic, missed call notification is published through that topic.
+
+![](/Users/mbd/Projects/telekom-client/imgs/2.png)
+
+If a delivery report is sent through REST for a given number it's callers are notified on socket topic. Let's say `555555551` wants to notify it's missed callers.
+
+![](/Users/mbd/Projects/telekom-client/imgs/3.png)
+
+Let's assume `555555552` also sends notifications.
+
+![](/Users/mbd/Projects/telekom-client/imgs/4.png)
+
+DB will have `true` value for `is_delivered` property of these calls.
+
+![](/Users/mbd/Projects/telekom-client/imgs/5.png)
+
 ### Language
 
 You can change message language by setting `telekom.lang` property in `application.yml` to `en` or `tr`. 
