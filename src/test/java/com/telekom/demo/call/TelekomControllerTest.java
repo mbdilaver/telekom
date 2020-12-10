@@ -81,44 +81,6 @@ public class TelekomControllerTest extends AbstractControllerTest {
         assertThat(StringUtils.containsIgnoreCase(notification, destinationNumber)).isTrue();
     }
 
-    @Test
-    public void should_getAvailableNotification() throws InterruptedException, ExecutionException, TimeoutException {
-        // given
-        String targetNumber = "123456788";
-        String destinationNumber = "123456786";
-
-        CallRequest request = new CallRequest();
-        request.setDestinationNumber(destinationNumber);
-        request.setTargetNumber(targetNumber);
-
-        // when
-        ResponseEntity<CallResponse> response = testRestTemplate.exchange(
-                "/calls",
-                HttpMethod.POST,
-                new HttpEntity<>(request, httpHeaders()),
-                CallResponse.class);
-
-        // then
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        // websocket
-        String webSocketUrl = "ws://localhost:" + port + "/chat";
-
-        StompSession session = stompClient
-                .connect(webSocketUrl, new StompSessionHandlerAdapter() {
-                })
-                .get(1, SECONDS);
-
-        session.subscribe("/notifications/" + targetNumber, new MessageStompFrameHandler());
-
-        //check message
-        String notification = messageBlockingQueue.poll(2, SECONDS);
-
-        assertThat(notification).isNotBlank();
-        assertThat(StringUtils.containsIgnoreCase(notification, destinationNumber)).isTrue();
-    }
-
     class MessageStompFrameHandler implements StompFrameHandler {
         @Override
         public Type getPayloadType(StompHeaders stompHeaders) {
