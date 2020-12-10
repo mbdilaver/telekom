@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +32,8 @@ public class CallService {
         callPort.approveCalls(ids);
     }
 
-    public void notifyMissedCallers(List<Long> callIds) {
+    public void notifyMissedCallers(List<Long> callIds, Locale locale) {
         Calls calls = callPort.getCallsById(callIds);
-        messagePort.notifyCallers(calls);
+        messagePort.notifyCallers(calls, locale);
     }
 }

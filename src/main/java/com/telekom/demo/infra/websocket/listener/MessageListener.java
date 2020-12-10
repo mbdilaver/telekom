@@ -27,6 +27,6 @@ public class MessageListener {
     }
 
     private String getNumberFromDestination(String simpDestination) {
-        return simpDestination.substring(simpDestination.lastIndexOf("/") + 1, simpDestination.length());
+        return simpDestination.substring(simpDestination.lastIndexOf("/") + 1);
     }
 }

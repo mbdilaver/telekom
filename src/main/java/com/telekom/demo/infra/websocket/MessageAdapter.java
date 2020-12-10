@@ -5,12 +5,15 @@ import com.telekom.demo.domain.model.CallNotification;
 import com.telekom.demo.domain.model.Calls;
 import com.telekom.demo.domain.port.MessagePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,7 +25,13 @@ import static java.util.stream.Collectors.maxBy;
 @RequiredArgsConstructor
 public class MessageAdapter implements MessagePort {
 
+    @Autowired
+    private MessageSource messageSource;
+
     private final SimpMessagingTemplate template;
+
+    @Autowired
+    private Locale defaultLocale;
 
     @Override
     public void publishNotifications(CallNotification subscription) {
@@ -47,7 +56,9 @@ public class MessageAdapter implements MessagePort {
                         callCounts.get(key)))
                 .collect(Collectors.joining("\n"));
 
-        return "Missed calls:\n" + numbers;
+        String header = messageSource.getMessage("notification.message", null, defaultLocale);
+
+        return header + numbers;
     }
 
     private String formatDate(LocalDateTime date) {
@@ -56,18 +67,18 @@ public class MessageAdapter implements MessagePort {
     }
 
     @Override
-    public void notifyCallers(Calls calls) {
-        calls.getCallList().forEach(this::sendAvailableNotification);
+    public void notifyCallers(Calls calls, Locale locale) {
+        calls.getCallList().forEach(call -> sendAvailableNotification(call, locale));
     }
 
-    private void sendAvailableNotification(Call call) {
-        String message = createAvailableMessage(call);
+    private void sendAvailableNotification(Call call, Locale locale) {
+        String message = createAvailableMessage(call, locale);
 
         template.convertAndSend("/notifications/" + call.getDestinationNumber(), message);
     }
 
-    private String createAvailableMessage(Call call) {
-        String format = "The number you called %s at %s is now available";
+    private String createAvailableMessage(Call call, Locale locale) {
+        String format = messageSource.getMessage("available.message", null, locale);
 
         return String.format(
                 format,
