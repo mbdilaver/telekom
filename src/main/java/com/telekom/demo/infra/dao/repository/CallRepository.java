@@ -1,6 +1,5 @@
 package com.telekom.demo.infra.dao.repository;
 
-import com.telekom.demo.domain.model.Number;
 import com.telekom.demo.infra.dao.entity.CallEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

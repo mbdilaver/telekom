@@ -5,7 +5,6 @@ import com.telekom.demo.domain.model.CallNotification;
 import com.telekom.demo.domain.model.Calls;
 import com.telekom.demo.domain.port.MessagePort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -25,12 +24,8 @@ import static java.util.stream.Collectors.maxBy;
 @RequiredArgsConstructor
 public class MessageAdapter implements MessagePort {
 
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private Locale defaultLocale;
-
+    private final MessageSource messageSource;
+    private final Locale defaultLocale;
     private final SimpMessagingTemplate template;
 
     @Override

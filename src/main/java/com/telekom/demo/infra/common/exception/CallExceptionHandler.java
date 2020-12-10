@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class CallExceptionHandler {
-    
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(CallBusinessException.class)
     public ExceptionResponse handleException(CallBusinessException exception) {

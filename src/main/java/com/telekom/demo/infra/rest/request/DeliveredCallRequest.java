@@ -1,10 +1,8 @@
 package com.telekom.demo.infra.rest.request;
 
-import com.telekom.demo.domain.model.Number;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
